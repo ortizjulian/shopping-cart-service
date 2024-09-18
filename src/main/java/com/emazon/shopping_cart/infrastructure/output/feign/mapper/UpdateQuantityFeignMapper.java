@@ -9,5 +9,4 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface UpdateQuantityFeignMapper {
 
-    UpdateQuantityFeignDto toFeignDto(UpdateQuantity updateQuantity);
 }

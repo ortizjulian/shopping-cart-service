@@ -10,4 +10,8 @@ public class Constants {
     public static final String MAPPER_SPRING = "spring";
     public static final String RESPONSE_MESSAGE_KEY = "Message";
 
+    //ArticleExceptions
+    public static final String EXCEPTION_ARTICLE_ID_NULL = "Article ID cannot be null";
+    public static final String EXCEPTION_ARTICLE_QUANTITY_NULL = "Quantity cannot be null";
+    public static final String EXCEPTION_ARTICLE_QUANTITY_POSITIVE = "Quantity must be a positive number";
 }

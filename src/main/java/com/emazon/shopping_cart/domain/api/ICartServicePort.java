@@ -1,5 +1,7 @@
 package com.emazon.shopping_cart.domain.api;
 
-public interface ICartServicePort {
+import com.emazon.shopping_cart.domain.model.AddArticle;
 
+public interface ICartServicePort {
+    void addToCart(AddArticle addArticle, Long userId);
 }
