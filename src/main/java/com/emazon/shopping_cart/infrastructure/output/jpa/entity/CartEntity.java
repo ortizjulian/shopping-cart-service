@@ -33,6 +33,6 @@ public class CartEntity {
     @Column(nullable = false)
     private LocalDateTime updatedDate;
 
-    @OneToMany(mappedBy = "cart_id", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<CartItemEntity> items;
 }

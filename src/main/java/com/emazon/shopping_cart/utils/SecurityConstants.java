@@ -5,6 +5,7 @@ public class SecurityConstants {
         throw new UnsupportedOperationException(Constants.UTILITY_CLASS_SHOULD_NOT_BE_INSTANTIATED);
     }
 
+    public static final Integer JWT_SUBSTRING = 7;
     //Token
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER ="Bearer ";
