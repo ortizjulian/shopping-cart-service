@@ -1,6 +1,9 @@
 package com.emazon.shopping_cart.infrastructure.output.feign.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -8,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CategoryQuantityRequest {
+public class ArticleListRequest {
     private List<Long> articleIds;
 }

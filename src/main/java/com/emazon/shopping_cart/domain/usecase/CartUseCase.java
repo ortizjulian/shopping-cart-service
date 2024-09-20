@@ -7,12 +7,11 @@ import com.emazon.shopping_cart.domain.model.*;
 import com.emazon.shopping_cart.domain.spi.ICartPersistencePort;
 import com.emazon.shopping_cart.domain.spi.IStockPersistencePort;
 import com.emazon.shopping_cart.domain.spi.ITransactionPersistencePort;
+import com.emazon.shopping_cart.domain.utils.PaginationValidator;
 import com.emazon.shopping_cart.utils.Constants;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CartUseCase implements ICartServicePort {
@@ -37,6 +36,10 @@ public class CartUseCase implements ICartServicePort {
 
     private void validateMaxCategories(Long cartId, List<Category> categories) {
         List<Long> articleIds = cartPersistencePort.getArticleIdsFromCart(cartId);
+
+        if(articleIds.isEmpty()) {
+            return;
+        }
 
         List<CategoryQuantity> categoryQuantities = stockPersistencePort.getCategoryQuantities(articleIds);
 
@@ -92,5 +95,35 @@ public class CartUseCase implements ICartServicePort {
             cartPersistencePort.updateCart(cart);
             cartPersistencePort.deleteItem(articleId,userId);
         }
+    }
+
+    @Override
+    public CartItems getAllItems(Integer page, Integer size, String sortDirection, String sortBy, String brandName, String categoryName, Long userId) {
+
+        PaginationValidator.validatePagination(page,size,sortDirection);
+
+        List<CartItem> cartItems = cartPersistencePort.getCartItemsFromUserId(userId);
+        if(cartItems.isEmpty()) {
+            return new CartItems(Constants.ZERO_DOUBLE, new PageCustom<>());
+        }
+        List<Long> articleIds = cartItems.stream()
+                .map(CartItem::getArticleId)
+                .toList();
+
+        PageCustom<Article> articles = stockPersistencePort.getArticlesByIds(page,size,sortDirection,sortBy,brandName,categoryName,articleIds);
+
+        double totalPrice = Constants.ZERO_DOUBLE;
+
+        for (Article article : articles.getContent()) {
+            for(CartItem cartItem: cartItems) {
+                if(Objects.equals(cartItem.getArticleId(), article.getId())) {
+                    article.setCartQuantity(cartItem.getQuantity());
+                    totalPrice += article.getPrice() * cartItem.getQuantity();
+                }
+            }
+
+        }
+
+        return new CartItems(totalPrice, articles);
     }
 }

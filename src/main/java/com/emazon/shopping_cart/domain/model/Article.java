@@ -8,17 +8,19 @@ public class Article {
     private String name;
     private String description;
     private Integer quantity;
+    private Integer cartQuantity;
     private Float price;
     private Brand brand;
     private List<Category> categories;
 
     public Article() {}
 
-    public Article(Long id, String name, String description, Integer quantity, Float price, Brand brand, List<Category> categories) {
+    public Article(Long id, String name, String description, Integer quantity, Integer cartQuantity, Float price, Brand brand, List<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
+        this.cartQuantity = cartQuantity;
         this.price = price;
         this.brand = brand;
         this.categories = categories;
@@ -78,5 +80,13 @@ public class Article {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public Integer getCartQuantity() {
+        return cartQuantity;
+    }
+
+    public void setCartQuantity(Integer cartQuantity) {
+        this.cartQuantity = cartQuantity;
     }
 }
