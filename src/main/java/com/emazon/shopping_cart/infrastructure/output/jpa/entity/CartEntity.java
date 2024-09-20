@@ -29,7 +29,6 @@ public class CartEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
-    @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedDate;
 

@@ -61,25 +61,36 @@ public class CartUseCase implements ICartServicePort {
 
         cart = optionalCart.orElseGet(() -> cartPersistencePort.createCart(userId));
 
-        CartItem cartItem = cartPersistencePort.getCartItem(cart.getId(), addArticle.getArticleId());
+        Article article = stockPersistencePort.getArticleById(addArticle.getArticleId());
 
+        CartItem cartItem = cartPersistencePort.getCartItem(cart.getId(), addArticle.getArticleId());
         if (cartItem != null) {
-            cartItem.setQuantity(cartItem.getQuantity() + addArticle.getQuantity());
-            addArticle.setQuantity(addArticle.getQuantity() + cartItem.getQuantity());
+            Integer currentQuantity = cartItem.getQuantity();
+            cartItem.setQuantity(currentQuantity + addArticle.getQuantity());
+            addArticle.setQuantity(addArticle.getQuantity() + currentQuantity);
         } else {
             cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setArticleId(addArticle.getArticleId());
             cartItem.setQuantity(addArticle.getQuantity());
+            this.validateMaxCategories(cart.getId(), article.getCategories());
         }
-        Article article = stockPersistencePort.getArticleById(addArticle.getArticleId());
 
         this.checkArticleStockAvailability(addArticle, article.getQuantity());
-
-        this.validateMaxCategories(cart.getId(), article.getCategories());
 
         cart.setUpdatedDate(LocalDateTime.now());
         cartPersistencePort.updateCart(cart);
         cartPersistencePort.saveCartItem(cartItem);
+    }
+
+    @Override
+    public void deleteItem(Long articleId, Long userId) {
+        Optional<Cart> optionalCart = cartPersistencePort.getCartByUserId(userId);
+        if(optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            cart.setUpdatedDate(LocalDateTime.now());
+            cartPersistencePort.updateCart(cart);
+            cartPersistencePort.deleteItem(articleId,userId);
+        }
     }
 }

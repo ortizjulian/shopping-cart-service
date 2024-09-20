@@ -28,7 +28,7 @@ public class ConfigFilter {
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/cart/**").hasAuthority(SecurityConstants.ROLE_CLIENT)
+                                .requestMatchers("/cart/**").hasAuthority(SecurityConstants.ROLE_CLIENT)
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
