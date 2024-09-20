@@ -9,6 +9,10 @@ public class AddArticle {
         this.quantity = quantity;
     }
 
+    public AddArticle() {
+
+    }
+
     public Long getArticleId() {
         return articleId;
     }

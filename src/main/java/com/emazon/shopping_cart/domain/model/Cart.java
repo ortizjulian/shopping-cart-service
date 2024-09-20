@@ -15,6 +15,10 @@ public class Cart {
         this.updatedDate = updatedDate;
     }
 
+    public Cart() {
+
+    }
+
     public Long getId() {
         return id;
     }

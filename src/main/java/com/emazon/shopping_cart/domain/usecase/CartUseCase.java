@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 
 public class CartUseCase implements ICartServicePort {
 
-    private final ICartPersistencePort cartPersistencePort;
-    private final IStockPersistencePort stockPersistencePort;
-    private final ITransactionPersistencePort iTransactionPersistencePort;
+    private ICartPersistencePort cartPersistencePort;
+    private IStockPersistencePort stockPersistencePort;
+    private ITransactionPersistencePort iTransactionPersistencePort;
 
     public CartUseCase(ICartPersistencePort cartPersistencePort, IStockPersistencePort stockPersistencePort, ITransactionPersistencePort iTransactionPersistencePort) {
         this.cartPersistencePort = cartPersistencePort;
