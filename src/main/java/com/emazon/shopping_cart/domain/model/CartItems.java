@@ -2,27 +2,27 @@ package com.emazon.shopping_cart.domain.model;
 
 
 public class CartItems {
-   private PageCustom<Article> articlePageCustom;
-   private Double totalPrice;
+   private PageCustom<Article> articles;
+   private String totalPrice;
 
-   public CartItems(Double totalPrice, PageCustom<Article> articlePageCustom) {
+   public CartItems(String totalPrice, PageCustom<Article> articles) {
       this.totalPrice = totalPrice;
-      this.articlePageCustom = articlePageCustom;
+      this.articles = articles;
    }
 
-   public PageCustom<Article> getArticlePageCustom() {
-      return articlePageCustom;
+   public PageCustom<Article> getArticles() {
+      return articles;
    }
 
-   public void setArticlePageCustom(PageCustom<Article> articlePageCustom) {
-      this.articlePageCustom = articlePageCustom;
+   public void setArticlePageCustom(PageCustom<Article> articles) {
+      this.articles = articles;
    }
 
-   public Double getTotalPrice() {
+   public String getTotalPrice() {
       return totalPrice;
    }
 
-   public void setTotalPrice(Double totalPrice) {
+   public void setTotalPrice(String totalPrice) {
       this.totalPrice = totalPrice;
    }
 }

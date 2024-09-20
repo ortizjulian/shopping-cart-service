@@ -10,6 +10,7 @@ import com.emazon.shopping_cart.domain.spi.ITransactionPersistencePort;
 import com.emazon.shopping_cart.domain.utils.PaginationValidator;
 import com.emazon.shopping_cart.utils.Constants;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -104,7 +105,7 @@ public class CartUseCase implements ICartServicePort {
 
         List<CartItem> cartItems = cartPersistencePort.getCartItemsFromUserId(userId);
         if(cartItems.isEmpty()) {
-            return new CartItems(Constants.ZERO_DOUBLE, new PageCustom<>());
+            return new CartItems(Constants.ZERO_STRING, new PageCustom<>());
         }
         List<Long> articleIds = cartItems.stream()
                 .map(CartItem::getArticleId)
@@ -123,7 +124,9 @@ public class CartUseCase implements ICartServicePort {
             }
 
         }
+        DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_PATTERN);
+        String totalPriceString = decimalFormat.format(totalPrice);
 
-        return new CartItems(totalPrice, articles);
+        return new CartItems(totalPriceString, articles);
     }
 }

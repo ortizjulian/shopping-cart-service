@@ -4,7 +4,6 @@ import com.emazon.shopping_cart.application.dto.AddArticleRequest;
 import com.emazon.shopping_cart.application.handler.ICartHandler;
 import com.emazon.shopping_cart.application.handler.ISecurityHandler;
 import com.emazon.shopping_cart.domain.model.CartItems;
-import com.emazon.shopping_cart.domain.model.PageCustom;
 import com.emazon.shopping_cart.infrastructure.output.security.jwt.JwtTokenManager;
 import com.emazon.shopping_cart.utils.Constants;
 import com.emazon.shopping_cart.utils.SecurityConstants;

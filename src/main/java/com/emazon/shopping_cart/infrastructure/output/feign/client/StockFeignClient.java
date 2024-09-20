@@ -8,10 +8,7 @@ import com.emazon.shopping_cart.infrastructure.output.feign.dto.ArticleListReque
 import com.emazon.shopping_cart.utils.FeignConstants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,12 +24,12 @@ public interface StockFeignClient {
 
     @GetMapping(FeignConstants.PATH_ARTICLE_LIST)
     ResponseEntity<PageCustom<Article>> getAllArticles(
-           Integer page,
-           Integer size,
-           String sortDirection,
-           String sortBy,
-           String brandName,
-           String categoryName,
-           List<Long> articleIds
+           @RequestParam Integer page,
+           @RequestParam Integer size,
+           @RequestParam String sortDirection,
+           @RequestParam String sortBy,
+           @RequestParam String brandName,
+           @RequestParam String categoryName,
+           @RequestParam List<Long> articleIds
     );
 }
