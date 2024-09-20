@@ -64,4 +64,9 @@ public class CartJpaAdapter implements ICartPersistencePort {
         CartEntity cartEntity = cartEntityMapper.toCartEntity(cart);
         cartRepository.save(cartEntity);
     }
+
+    @Override
+    public void deleteItem(Long articleId, Long userId) {
+        cartItemRepository.deleteByArticleIdAndCartUserId(articleId,userId);
+    }
 }

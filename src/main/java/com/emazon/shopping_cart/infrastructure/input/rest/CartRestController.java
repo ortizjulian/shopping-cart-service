@@ -45,4 +45,16 @@ public class CartRestController {
         }
     }
 
+    @Operation(summary = "Delete a article from cart", description = "Removes a specified article from the user's cart based on the article ID and user token.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Article deleted from cart successfully"),
+    })
+    @DeleteMapping("/items/{articleId}")
+    public ResponseEntity<Void> deleteItemFromCart(@PathVariable Long articleId,
+                                                      @RequestHeader(SecurityConstants.AUTHORIZATION) String token){
+        Long userId = tokenManager.extractIdFromFullToken(token);
+        cartHandler.deleteItem(articleId,userId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

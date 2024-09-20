@@ -106,6 +106,13 @@ class CartUseCaseTest {
         assertThrows(CategoryLimitExceededException.class, () -> {
             cartUseCase.addToCart(addArticle, 1L);
         });
-
     }
+    @Test
+    void CartUseCase_DeleteItem_ShouldDeleteSuccessfully(){
+        Mockito.when(cartPersistencePort.getCartByUserId(2L)).thenReturn(Optional.of(cart));
+        cartUseCase.deleteItem(1L,2L);
+        Mockito.verify(cartPersistencePort).updateCart(cart);
+        Mockito.verify(cartPersistencePort).deleteItem(1L,2L);
+    }
+
 }

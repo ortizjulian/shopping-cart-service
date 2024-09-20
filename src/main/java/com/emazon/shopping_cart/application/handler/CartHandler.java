@@ -20,4 +20,9 @@ public class CartHandler implements ICartHandler {
         AddArticle addArticle = addArticleRequestMapper.addArticleRequestToAddArticle(addArticleRequest);
         cartServicePort.addToCart(addArticle, userId);
     }
+
+    @Override
+    public void deleteItem(Long articleId, Long userId) {
+        cartServicePort.deleteItem(articleId,userId);
+    }
 }
