@@ -113,7 +113,24 @@ public class CartUseCase implements ICartServicePort {
                 .toList();
 
         PageCustom<Article> articles = stockPersistencePort.getArticlesByIds(page,size,sortDirection,sortBy,brandName,categoryName,articleIds);
-        
+
+        for (Article article : articles.getContent()) {
+
+            CartItem matchingCartItem = cartItems.stream()
+                    .filter(cartItem -> cartItem.getArticleId().equals(article.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (matchingCartItem != null) {
+
+                article.setCartQuantity(matchingCartItem.getQuantity());
+                if (article.getQuantity() < matchingCartItem.getQuantity()) {
+                    LocalDateTime nextSupplyDate = this.iTransactionPersistencePort.nextSupplyDate(article.getId());
+                    article.setNextRestockDate(nextSupplyDate);
+                }
+            }
+        }
+
         Double totalPrice = stockPersistencePort.getTotalPriceByArticleIds(articleIds);
 
         DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_PATTERN);
