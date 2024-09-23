@@ -78,6 +78,4 @@ public class CartJpaAdapter implements ICartPersistencePort {
         }
         return cartItemEntityMapper.toCartItemList(cartItems.get());
     }
-
-
 }

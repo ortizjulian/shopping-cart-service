@@ -42,8 +42,13 @@ public class CartRestController {
             @RequestHeader(SecurityConstants.AUTHORIZATION) String token
 
     ){
-        Long userId = tokenManager.extractIdFromFullToken(token);
-        return ResponseEntity.ok(cartHandler.getAllItems(page,size,sortDirection,sortBy,brandName,categoryName,userId));
+        try {
+            Long userId = tokenManager.extractIdFromFullToken(token);
+            securityHandler.setToken(token);
+            return ResponseEntity.ok(cartHandler.getAllItems(page,size,sortDirection,sortBy,brandName,categoryName,userId));
+        } finally {
+            securityHandler.removeToken();
+        }
     }
 
     @Operation(summary = "Add Article to Cart", description = "Adds an article to the user's cart.")

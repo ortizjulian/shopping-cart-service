@@ -31,7 +31,7 @@ public class CartUseCase implements ICartServicePort {
         if(stockAvailable < addArticle.getQuantity()) {
             LocalDateTime nextSupplyDate = this.iTransactionPersistencePort.nextSupplyDate(addArticle.getArticleId());
 
-            throw new InsufficientStockException(Constants.STOCK_INSUFFICIENT_EXCEPTION + stockAvailable + Constants.NEXT_SUPPLY_EXCEPTION + nextSupplyDate);
+            throw new InsufficientStockException(Constants.STOCK_INSUFFICIENT_EXCEPTION + stockAvailable + Constants.NEXT_SUPPLY_EXCEPTION + nextSupplyDate.toLocalDate());
         }
     }
 
@@ -94,6 +94,7 @@ public class CartUseCase implements ICartServicePort {
             Cart cart = optionalCart.get();
             cart.setUpdatedDate(LocalDateTime.now());
             cartPersistencePort.updateCart(cart);
+
             cartPersistencePort.deleteItem(articleId,userId);
         }
     }
@@ -112,18 +113,9 @@ public class CartUseCase implements ICartServicePort {
                 .toList();
 
         PageCustom<Article> articles = stockPersistencePort.getArticlesByIds(page,size,sortDirection,sortBy,brandName,categoryName,articleIds);
+        
+        Double totalPrice = stockPersistencePort.getTotalPriceByArticleIds(articleIds);
 
-        double totalPrice = Constants.ZERO_DOUBLE;
-
-        for (Article article : articles.getContent()) {
-            for(CartItem cartItem: cartItems) {
-                if(Objects.equals(cartItem.getArticleId(), article.getId())) {
-                    article.setCartQuantity(cartItem.getQuantity());
-                    totalPrice += article.getPrice() * cartItem.getQuantity();
-                }
-            }
-
-        }
         DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_PATTERN);
         String totalPriceString = decimalFormat.format(totalPrice);
 

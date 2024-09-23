@@ -6,6 +6,7 @@ import com.emazon.shopping_cart.domain.model.PageCustom;
 import com.emazon.shopping_cart.domain.spi.IStockPersistencePort;
 import com.emazon.shopping_cart.infrastructure.output.feign.client.StockFeignClient;
 import com.emazon.shopping_cart.infrastructure.output.feign.dto.ArticleListRequest;
+import com.emazon.shopping_cart.infrastructure.output.feign.dto.PriceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
@@ -33,5 +34,12 @@ public class StockFeignAdapter implements IStockPersistencePort {
     public PageCustom<Article> getArticlesByIds(Integer page, Integer size, String sortDirection, String sortBy, String brandName, String categoryName,List<Long> articleIds) {
         ResponseEntity<PageCustom<Article>> response = stockFeignClient.getAllArticles(page, size, sortDirection, sortBy, brandName, categoryName, articleIds);
         return response.getBody();
+    }
+
+    @Override
+    public Double getTotalPriceByArticleIds(List<Long> articleIds) {
+        ArticleListRequest articleListRequest = new ArticleListRequest(articleIds);
+        ResponseEntity<PriceDto> response=  stockFeignClient.getTotalPriceByArticleIds(articleListRequest);
+        return response.getBody().getTotalPrice();
     }
 }

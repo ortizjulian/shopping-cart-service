@@ -10,4 +10,5 @@ public interface IStockPersistencePort {
     Article getArticleById(Long articleId);
     List<CategoryQuantity> getCategoryQuantities(List<Long> articleIds);
     PageCustom<Article> getArticlesByIds(Integer page, Integer size, String sortDirection, String sortBy, String brandName, String categoryName,List<Long> articleIds);
+    Double getTotalPriceByArticleIds(List<Long> articleIds);
 }

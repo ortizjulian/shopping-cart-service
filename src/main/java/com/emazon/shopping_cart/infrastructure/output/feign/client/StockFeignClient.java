@@ -5,6 +5,7 @@ import com.emazon.shopping_cart.domain.model.CategoryQuantity;
 import com.emazon.shopping_cart.domain.model.PageCustom;
 import com.emazon.shopping_cart.infrastructure.configuration.feign.FeignClientConfig;
 import com.emazon.shopping_cart.infrastructure.output.feign.dto.ArticleListRequest;
+import com.emazon.shopping_cart.infrastructure.output.feign.dto.PriceDto;
 import com.emazon.shopping_cart.utils.FeignConstants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -32,4 +33,9 @@ public interface StockFeignClient {
            @RequestParam String categoryName,
            @RequestParam List<Long> articleIds
     );
+
+    @PostMapping(FeignConstants.PATH_ARTICLE_TOTAL_PRICE)
+    ResponseEntity<PriceDto> getTotalPriceByArticleIds(
+            @RequestBody ArticleListRequest articleIds);
+
 }

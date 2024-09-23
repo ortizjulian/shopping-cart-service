@@ -22,6 +22,7 @@ public class FeignConstants {
     public static final String PATH_ARTICLE_URL = "${stock.base-url}";
     public static final String PATH_ARTICLE_CHECK_STOCK = "/article/{articleId}";
     public static final String PATH_ARTICLE_LIST = "/article";
+    public static final String PATH_ARTICLE_TOTAL_PRICE = "/article/price";
     public static final String ARTICLE_ID = "articleId";
     //Category
     public static final String PATH_CATEGORY_QUANTITIES = "/category/quantities";
