@@ -9,8 +9,25 @@ public class Constants {
 
     public static final String MAPPER_SPRING = "spring";
     public static final String RESPONSE_MESSAGE_KEY = "Message";
-
+    public static final Double ZERO_DOUBLE = 0D;
+    public static final String ZERO_STRING = "";
+    public static final String DECIMAL_PATTERN = "#,##0.00";
     public static final String EXCEPTION_SERVICE_UNAVAILABLE = "The service is currently unavailable. Please try again later.";
+    // Pagination defaults
+    public static final Integer PAGINATION_ZERO = 0;
+    public static final String DEFAULT_PAGE = "0";
+    public static final String DEFAULT_SIZE = "10";
+    public static final String DEFAULT_SORT_DIRECTION = "ASC";
+    public static final String DEFAULT_SORT_BY = "name";
+    public static final String SORT_DIRECTION_ASC = "ASC";
+    public static final String SORT_DIRECTION_DESC = "DESC";
+    public static final String DEFAULT_BRAND_NAME = "";
+    public static final String DEFAULT_CATEGORY_NAME = "";
+    //Pagination Exceptions
+    public static final String EXCEPTION_PAGE_NUMBER_NEGATIVE = "Page number cannot be negative.";
+    public static final String EXCEPTION_PAGE_SIZE_NEGATIVE = "Page size cannot be negative.";
+    public static final String EXCEPTION_SORT_DIRECTION_INVALID = "Sort direction must be 'ASC' or 'DESC'.";
+
 
     //ArticleExceptions
     public static final String EXCEPTION_ARTICLE_ID_NULL = "Article ID cannot be null";

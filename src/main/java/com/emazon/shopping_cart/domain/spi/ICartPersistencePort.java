@@ -15,4 +15,5 @@ public interface ICartPersistencePort {
     List<Long> getArticleIdsFromCart(Long cartId);
     void updateCart(Cart cart);
     void deleteItem(Long articleId, Long userId);
+    List<CartItem> getCartItemsFromUserId(Long userId);
 }

@@ -7,12 +7,12 @@ import com.emazon.shopping_cart.domain.model.*;
 import com.emazon.shopping_cart.domain.spi.ICartPersistencePort;
 import com.emazon.shopping_cart.domain.spi.IStockPersistencePort;
 import com.emazon.shopping_cart.domain.spi.ITransactionPersistencePort;
+import com.emazon.shopping_cart.domain.utils.PaginationValidator;
 import com.emazon.shopping_cart.utils.Constants;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CartUseCase implements ICartServicePort {
@@ -31,12 +31,16 @@ public class CartUseCase implements ICartServicePort {
         if(stockAvailable < addArticle.getQuantity()) {
             LocalDateTime nextSupplyDate = this.iTransactionPersistencePort.nextSupplyDate(addArticle.getArticleId());
 
-            throw new InsufficientStockException(Constants.STOCK_INSUFFICIENT_EXCEPTION + stockAvailable + Constants.NEXT_SUPPLY_EXCEPTION + nextSupplyDate);
+            throw new InsufficientStockException(Constants.STOCK_INSUFFICIENT_EXCEPTION + stockAvailable + Constants.NEXT_SUPPLY_EXCEPTION + nextSupplyDate.toLocalDate());
         }
     }
 
     private void validateMaxCategories(Long cartId, List<Category> categories) {
         List<Long> articleIds = cartPersistencePort.getArticleIdsFromCart(cartId);
+
+        if(articleIds.isEmpty()) {
+            return;
+        }
 
         List<CategoryQuantity> categoryQuantities = stockPersistencePort.getCategoryQuantities(articleIds);
 
@@ -90,7 +94,31 @@ public class CartUseCase implements ICartServicePort {
             Cart cart = optionalCart.get();
             cart.setUpdatedDate(LocalDateTime.now());
             cartPersistencePort.updateCart(cart);
+
             cartPersistencePort.deleteItem(articleId,userId);
         }
+    }
+
+    @Override
+    public CartItems getAllItems(Integer page, Integer size, String sortDirection, String sortBy, String brandName, String categoryName, Long userId) {
+
+        PaginationValidator.validatePagination(page,size,sortDirection);
+
+        List<CartItem> cartItems = cartPersistencePort.getCartItemsFromUserId(userId);
+        if(cartItems.isEmpty()) {
+            return new CartItems(Constants.ZERO_STRING, new PageCustom<>());
+        }
+        List<Long> articleIds = cartItems.stream()
+                .map(CartItem::getArticleId)
+                .toList();
+
+        PageCustom<Article> articles = stockPersistencePort.getArticlesByIds(page,size,sortDirection,sortBy,brandName,categoryName,articleIds);
+        
+        Double totalPrice = stockPersistencePort.getTotalPriceByArticleIds(articleIds);
+
+        DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_PATTERN);
+        String totalPriceString = decimalFormat.format(totalPrice);
+
+        return new CartItems(totalPriceString, articles);
     }
 }

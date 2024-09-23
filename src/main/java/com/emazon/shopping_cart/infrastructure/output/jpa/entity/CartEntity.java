@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +28,6 @@ public class CartEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
-    @Column(nullable = false)
     private LocalDateTime updatedDate;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

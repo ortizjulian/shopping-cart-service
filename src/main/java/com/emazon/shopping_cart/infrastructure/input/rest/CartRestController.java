@@ -3,7 +3,9 @@ package com.emazon.shopping_cart.infrastructure.input.rest;
 import com.emazon.shopping_cart.application.dto.AddArticleRequest;
 import com.emazon.shopping_cart.application.handler.ICartHandler;
 import com.emazon.shopping_cart.application.handler.ISecurityHandler;
+import com.emazon.shopping_cart.domain.model.CartItems;
 import com.emazon.shopping_cart.infrastructure.output.security.jwt.JwtTokenManager;
+import com.emazon.shopping_cart.utils.Constants;
 import com.emazon.shopping_cart.utils.SecurityConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,6 +26,30 @@ public class CartRestController {
     private final ICartHandler cartHandler;
     private final ISecurityHandler securityHandler;
     private final JwtTokenManager tokenManager;
+
+    @Operation(summary = "Retrieve all Items in cart", description = "Returns a list of all items in user cart.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of items"),
+    })
+    @GetMapping
+    public ResponseEntity<CartItems> getAllArticles(
+            @RequestParam(defaultValue = Constants.DEFAULT_PAGE) Integer page,
+            @RequestParam(defaultValue = Constants.DEFAULT_SIZE) Integer size,
+            @RequestParam(defaultValue = Constants.DEFAULT_SORT_DIRECTION) String sortDirection,
+            @RequestParam(defaultValue = Constants.DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(defaultValue = Constants.DEFAULT_BRAND_NAME) String brandName,
+            @RequestParam(defaultValue = Constants.DEFAULT_CATEGORY_NAME) String categoryName,
+            @RequestHeader(SecurityConstants.AUTHORIZATION) String token
+
+    ){
+        try {
+            Long userId = tokenManager.extractIdFromFullToken(token);
+            securityHandler.setToken(token);
+            return ResponseEntity.ok(cartHandler.getAllItems(page,size,sortDirection,sortBy,brandName,categoryName,userId));
+        } finally {
+            securityHandler.removeToken();
+        }
+    }
 
     @Operation(summary = "Add Article to Cart", description = "Adds an article to the user's cart.")
     @ApiResponses(value = {

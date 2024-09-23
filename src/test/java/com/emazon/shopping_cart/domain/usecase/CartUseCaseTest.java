@@ -57,7 +57,7 @@ class CartUseCaseTest {
         article = new Article();
         article.setId(1L);
         article.setQuantity(10);
-        article.setCategories(List.of(new Category(1L, "Phone", "Apple")));
+        article.setCategories(List.of(new Category(1L, "Phone")));
     }
 
     @Test

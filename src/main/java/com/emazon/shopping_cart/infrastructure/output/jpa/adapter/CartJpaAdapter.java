@@ -69,4 +69,13 @@ public class CartJpaAdapter implements ICartPersistencePort {
     public void deleteItem(Long articleId, Long userId) {
         cartItemRepository.deleteByArticleIdAndCartUserId(articleId,userId);
     }
+
+    @Override
+    public List<CartItem> getCartItemsFromUserId(Long userId) {
+        Optional<List<CartItemEntity>> cartItems = cartItemRepository.findByCartUserId(userId);
+        if (cartItems.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return cartItemEntityMapper.toCartItemList(cartItems.get());
+    }
 }
