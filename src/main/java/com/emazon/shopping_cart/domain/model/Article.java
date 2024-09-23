@@ -1,5 +1,6 @@
 package com.emazon.shopping_cart.domain.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Article {
@@ -9,22 +10,12 @@ public class Article {
     private String description;
     private Integer quantity;
     private Integer cartQuantity;
+    private LocalDateTime nextRestockDate;
     private Float price;
     private Brand brand;
     private List<Category> categories;
 
     public Article() {}
-
-    public Article(Long id, String name, String description, Integer quantity, Integer cartQuantity, Float price, Brand brand, List<Category> categories) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.cartQuantity = cartQuantity;
-        this.price = price;
-        this.brand = brand;
-        this.categories = categories;
-    }
 
     public Long getId() {
         return id;
@@ -88,5 +79,13 @@ public class Article {
 
     public void setCartQuantity(Integer cartQuantity) {
         this.cartQuantity = cartQuantity;
+    }
+
+    public LocalDateTime getNextRestockDate() {
+        return nextRestockDate;
+    }
+
+    public void setNextRestockDate(LocalDateTime nextRestockDate) {
+        this.nextRestockDate = nextRestockDate;
     }
 }
