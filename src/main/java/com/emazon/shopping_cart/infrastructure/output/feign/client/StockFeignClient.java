@@ -16,7 +16,7 @@ import java.util.List;
 
 @FeignClient(name = FeignConstants.FEIGN_STOCK_NAME, url =FeignConstants.PATH_ARTICLE_URL,configuration = FeignClientConfig.class)
 public interface StockFeignClient {
-    @GetMapping(FeignConstants.PATH_ARTICLE_CHECK_STOCK)
+    @GetMapping(FeignConstants.PATH_ARTICLE_BY_ID)
     ResponseEntity<Article> getArticleById(@PathVariable(FeignConstants.ARTICLE_ID) Long articleId);
 
     @PostMapping(FeignConstants.PATH_CATEGORY_QUANTITIES)

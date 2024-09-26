@@ -1,6 +1,7 @@
 package com.emazon.shopping_cart.utils;
 
 public class Constants {
+
     private Constants() {
         throw new UnsupportedOperationException(UTILITY_CLASS_SHOULD_NOT_BE_INSTANTIATED);
     }
@@ -27,7 +28,8 @@ public class Constants {
     public static final String EXCEPTION_PAGE_NUMBER_NEGATIVE = "Page number cannot be negative.";
     public static final String EXCEPTION_PAGE_SIZE_NEGATIVE = "Page size cannot be negative.";
     public static final String EXCEPTION_SORT_DIRECTION_INVALID = "Sort direction must be 'ASC' or 'DESC'.";
-
+    //Cart Exceptions
+    public static final String EXCEPTION_CART_ITEM_NOT_FOUND = "No matching cart item found for the article with ID: ";
 
     //ArticleExceptions
     public static final String EXCEPTION_ARTICLE_ID_NULL = "Article ID cannot be null";
