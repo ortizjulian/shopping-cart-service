@@ -11,7 +11,7 @@ public class Constants {
     public static final String MAPPER_SPRING = "spring";
     public static final String RESPONSE_MESSAGE_KEY = "Message";
     public static final Double ZERO_DOUBLE = 0D;
-    public static final String ZERO_STRING = "";
+    public static final String ZERO_STRING = "0";
     public static final String DECIMAL_PATTERN = "#,##0.00";
     public static final String EXCEPTION_SERVICE_UNAVAILABLE = "The service is currently unavailable. Please try again later.";
     // Pagination defaults

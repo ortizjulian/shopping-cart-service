@@ -3,6 +3,7 @@ package com.emazon.shopping_cart.domain.usecase;
 
 import com.emazon.shopping_cart.domain.exceptions.CategoryLimitExceededException;
 import com.emazon.shopping_cart.domain.exceptions.InsufficientStockException;
+import com.emazon.shopping_cart.domain.exceptions.PaginationParametersInvalidException;
 import com.emazon.shopping_cart.domain.model.*;
 import com.emazon.shopping_cart.domain.spi.ICartPersistencePort;
 import com.emazon.shopping_cart.domain.spi.IStockPersistencePort;
@@ -17,10 +18,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -115,4 +117,58 @@ class CartUseCaseTest {
         Mockito.verify(cartPersistencePort).deleteItem(1L,2L);
     }
 
+    @Test
+    void CartUseCase_GetAllItems_ShouldReturnCartItemsSuccessfully() {
+        CartItem cartItem = new CartItem();
+        cartItem.setArticleId(1L);
+        cartItem.setQuantity(2);
+
+        List<CartItem> cartItems = List.of(cartItem);
+        Mockito.when(cartPersistencePort.getCartItemsFromUserId(1L)).thenReturn(cartItems);
+
+        Article article = new Article();
+        article.setId(1L);
+        article.setQuantity(10);
+        article.setPrice(200f);
+        article.setCategories(List.of(new Category(1L, "Celular")));
+
+        PageCustom<Article> articlesPage = new PageCustom<>();
+        articlesPage.setContent(List.of(article));
+        Mockito.when(stockPersistencePort.getArticlesByIds(0, 10, "ASC", "name", null, null, List.of(1L)))
+                .thenReturn(articlesPage);
+
+        Mockito.when(stockPersistencePort.getTotalPriceByArticleIds(List.of(1L))).thenReturn(400.0);
+
+        CartItems result = cartUseCase.getAllItems(0, 10, "ASC", "name", null, null, 1L);
+
+        assertNotNull(result);
+        assertEquals("400,00", result.getTotalPrice());
+        assertFalse(result.getArticles().getContent().isEmpty());
+        assertEquals(1, result.getArticles().getContent().size());
+
+        Article resultArticle = result.getArticles().getContent().get(0);
+        assertEquals(2, resultArticle.getCartQuantity());
+
+        Mockito.verify(cartPersistencePort).getCartItemsFromUserId(1L);
+        Mockito.verify(stockPersistencePort).getArticlesByIds(0, 10, "ASC", "name", null, null, List.of(1L));
+        Mockito.verify(stockPersistencePort).getTotalPriceByArticleIds(List.of(1L));
+    }
+
+
+    @Test
+    void CartUseCase_GetAllItems_ShouldReturnEmptyCartItems_WhenCartIsEmpty() {
+        Mockito.when(cartPersistencePort.getCartItemsFromUserId(1L)).thenReturn(Collections.emptyList());
+
+        CartItems result = cartUseCase.getAllItems(1, 10, "ASC", "name", null, null, 1L);
+
+        assertEquals("0", result.getTotalPrice());
+        assertNull(result.getArticles().getContent());
+    }
+
+    @Test
+    void CartUseCase_GetAllItems_ShouldThrowPaginationException_WhenInvalidPaginationParametersProvided() {
+        assertThrows(PaginationParametersInvalidException.class, () -> {
+            cartUseCase.getAllItems(-1, 0, null, "name", null, null, 1L);
+        });
+    }
 }
