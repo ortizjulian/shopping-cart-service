@@ -1,5 +1,6 @@
 package com.emazon.shopping_cart.infrastructure.exceptionhandler;
 
+import com.emazon.shopping_cart.domain.exceptions.CartItemNotFoundException;
 import com.emazon.shopping_cart.domain.exceptions.CategoryLimitExceededException;
 import com.emazon.shopping_cart.domain.exceptions.InsufficientStockException;
 import com.emazon.shopping_cart.domain.exceptions.PaginationParametersInvalidException;
@@ -70,7 +71,6 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, categoryLimitException.getMessage()));
     }
 
-
     @ExceptionHandler(ConnectException.class)
     public ResponseEntity<Map<String, String>> handleConnectException(
             ConnectException connectExceptionException) {
@@ -83,5 +83,12 @@ public class ControllerAdvisor {
             PaginationParametersInvalidException paginationParametersInvalidException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap(MESSAGE, paginationParametersInvalidException.getMessage()));
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCartItemNotFoundException(
+            CartItemNotFoundException cartItemNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(MESSAGE, cartItemNotFoundException.getMessage()));
     }
 }

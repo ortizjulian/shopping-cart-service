@@ -1,6 +1,7 @@
 package com.emazon.shopping_cart.domain.usecase;
 
 import com.emazon.shopping_cart.domain.api.ICartServicePort;
+import com.emazon.shopping_cart.domain.exceptions.CartItemNotFoundException;
 import com.emazon.shopping_cart.domain.exceptions.CategoryLimitExceededException;
 import com.emazon.shopping_cart.domain.exceptions.InsufficientStockException;
 import com.emazon.shopping_cart.domain.model.*;
@@ -46,7 +47,6 @@ public class CartUseCase implements ICartServicePort {
 
         Map<String, Long> currentCategoryCounts = categoryQuantities.stream()
                 .collect(Collectors.toMap(CategoryQuantity::getCategoryName, CategoryQuantity::getQuantity));
-
 
         for (Category category : categories) {
             Long newCategoryCount = currentCategoryCounts.getOrDefault(category.getName(), Constants.ZERO) + Constants.ONE;
@@ -108,6 +108,7 @@ public class CartUseCase implements ICartServicePort {
         if(cartItems.isEmpty()) {
             return new CartItems(Constants.ZERO_STRING, new PageCustom<>());
         }
+
         List<Long> articleIds = cartItems.stream()
                 .map(CartItem::getArticleId)
                 .toList();
@@ -115,27 +116,37 @@ public class CartUseCase implements ICartServicePort {
         PageCustom<Article> articles = stockPersistencePort.getArticlesByIds(page,size,sortDirection,sortBy,brandName,categoryName,articleIds);
 
         for (Article article : articles.getContent()) {
-
-            CartItem matchingCartItem = cartItems.stream()
-                    .filter(cartItem -> cartItem.getArticleId().equals(article.getId()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (matchingCartItem != null) {
-
-                article.setCartQuantity(matchingCartItem.getQuantity());
-                if (article.getQuantity() < matchingCartItem.getQuantity()) {
-                    LocalDateTime nextSupplyDate = this.iTransactionPersistencePort.nextSupplyDate(article.getId());
-                    article.setNextRestockDate(nextSupplyDate);
-                }
-            }
+            updateArticleCartInfo(article, cartItems);
         }
 
-        Double totalPrice = stockPersistencePort.getTotalPriceByArticleIds(articleIds);
-
-        DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_PATTERN);
-        String totalPriceString = decimalFormat.format(totalPrice);
+        String totalPriceString = calculatePrice(articleIds);
 
         return new CartItems(totalPriceString, articles);
     }
+
+    private String calculatePrice(List<Long> articlesIds){
+        Double totalPrice = stockPersistencePort.getTotalPriceByArticleIds(articlesIds);
+
+        DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_PATTERN);
+        return decimalFormat.format(totalPrice);
+    }
+
+    private void updateArticleCartInfo(Article article, List<CartItem> cartItems) {
+        CartItem matchingCartItem = cartItems.stream()
+                .filter(cartItem -> cartItem.getArticleId().equals(article.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (matchingCartItem == null) {
+            throw new CartItemNotFoundException(Constants.EXCEPTION_CART_ITEM_NOT_FOUND + article.getId());
+        }
+
+        article.setCartQuantity(matchingCartItem.getQuantity());
+
+        if (article.getQuantity() < matchingCartItem.getQuantity()) {
+            LocalDateTime nextSupplyDate = this.iTransactionPersistencePort.nextSupplyDate(article.getId());
+            article.setNextRestockDate(nextSupplyDate);
+        }
+    }
+
 }

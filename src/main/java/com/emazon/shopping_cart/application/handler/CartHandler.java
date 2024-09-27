@@ -5,7 +5,6 @@ import com.emazon.shopping_cart.application.mapper.AddArticleRequestMapper;
 import com.emazon.shopping_cart.domain.api.ICartServicePort;
 import com.emazon.shopping_cart.domain.model.AddArticle;
 import com.emazon.shopping_cart.domain.model.CartItems;
-import com.emazon.shopping_cart.domain.model.PageCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

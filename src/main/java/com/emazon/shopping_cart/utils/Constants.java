@@ -1,6 +1,7 @@
 package com.emazon.shopping_cart.utils;
 
 public class Constants {
+
     private Constants() {
         throw new UnsupportedOperationException(UTILITY_CLASS_SHOULD_NOT_BE_INSTANTIATED);
     }
@@ -10,7 +11,7 @@ public class Constants {
     public static final String MAPPER_SPRING = "spring";
     public static final String RESPONSE_MESSAGE_KEY = "Message";
     public static final Double ZERO_DOUBLE = 0D;
-    public static final String ZERO_STRING = "";
+    public static final String ZERO_STRING = "0";
     public static final String DECIMAL_PATTERN = "#,##0.00";
     public static final String EXCEPTION_SERVICE_UNAVAILABLE = "The service is currently unavailable. Please try again later.";
     // Pagination defaults
@@ -27,7 +28,8 @@ public class Constants {
     public static final String EXCEPTION_PAGE_NUMBER_NEGATIVE = "Page number cannot be negative.";
     public static final String EXCEPTION_PAGE_SIZE_NEGATIVE = "Page size cannot be negative.";
     public static final String EXCEPTION_SORT_DIRECTION_INVALID = "Sort direction must be 'ASC' or 'DESC'.";
-
+    //Cart Exceptions
+    public static final String EXCEPTION_CART_ITEM_NOT_FOUND = "No matching cart item found for the article with ID: ";
 
     //ArticleExceptions
     public static final String EXCEPTION_ARTICLE_ID_NULL = "Article ID cannot be null";
